@@ -152,6 +152,17 @@ namespace SupermercadoApp.Forms
                 using (var conn = Conexion.ObtenerConexion())
                 {
                     conn.Open();
+
+                    // No permitir dos proveedores con el mismo nombre
+                    var existe = new SqlCommand("SELECT COUNT(*) FROM Proveedores WHERE LTRIM(RTRIM(Nombre)) = @n AND Id <> @id", conn);
+                    existe.Parameters.AddWithValue("@n", txtNombre.Text.Trim());
+                    existe.Parameters.AddWithValue("@id", idSeleccionado);
+                    if ((int)existe.ExecuteScalar() > 0)
+                    {
+                        MessageBox.Show("Ya existe un proveedor con ese nombre. Búsquelo en la lista y edítelo en vez de crear otro.");
+                        return;
+                    }
+
                     SqlCommand cmd = idSeleccionado == 0
                         ? new SqlCommand("INSERT INTO Proveedores (Nombre, Telefono, Correo, Direccion) VALUES (@n,@t,@c,@d)", conn)
                         : new SqlCommand("UPDATE Proveedores SET Nombre=@n, Telefono=@t, Correo=@c, Direccion=@d WHERE Id=@id", conn);
@@ -166,6 +177,10 @@ namespace SupermercadoApp.Forms
                 Auditoria.Registrar(Sesion.UsuarioId, "Guardar proveedor", $"Proveedor '{txtNombre.Text.Trim()}' guardado.");
                 Limpiar();
                 CargarDatos();
+            }
+            catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
+            {
+                MessageBox.Show("Ya existe un proveedor con ese nombre.");
             }
             catch (Exception ex)
             {

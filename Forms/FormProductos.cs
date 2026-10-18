@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using SupermercadoApp.Datos;
 
@@ -293,6 +294,29 @@ namespace SupermercadoApp.Forms
             return true;
         }
 
+        /// <summary>
+        /// Si la categoría escrita ya existe con otra forma (mayúsculas, tildes,
+        /// espacios o plural: "bebida", "LACTEOS"), devuelve la forma ya usada
+        /// ("Bebidas", "Lácteos") para no crear categorías repetidas.
+        /// </summary>
+        private string NormalizarCategoria(string texto)
+        {
+            texto = (texto ?? "").Trim();
+            if (texto.Length == 0) return texto;
+
+            var comparador = System.Globalization.CultureInfo.InvariantCulture.CompareInfo;
+            var opciones = System.Globalization.CompareOptions.IgnoreCase | System.Globalization.CompareOptions.IgnoreNonSpace;
+            bool Igual(string a, string b) => comparador.Compare(a, b, opciones) == 0;
+
+            var conocidas = CategoriasComunes.Concat(cmbCategoria.Items.Cast<object>().Select(i => i.ToString()));
+            foreach (var categoria in conocidas)
+            {
+                if (Igual(texto, categoria) || Igual(texto + "s", categoria) || Igual(texto, categoria + "s"))
+                    return categoria;
+            }
+            return texto;
+        }
+
         private bool CodigoDuplicado(string codigo)
         {
             try
@@ -317,6 +341,7 @@ namespace SupermercadoApp.Forms
         private void BtnGuardar_Click(object sender, EventArgs e)
         {
             if (!ValidarCampos()) return;
+            cmbCategoria.Text = NormalizarCategoria(cmbCategoria.Text);
 
             try
             {
