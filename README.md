@@ -4,6 +4,8 @@
 
 Proyecto final en equipo de **Análisis y Diseño de Sistemas I**, Bachillerato en Ingeniería en Sistemas Computacionales, Universidad Autónoma de Centroamérica (UACA).
 
+![Punto de venta](docs/capturas/3_punto_de_venta.png)
+
 ---
 
 ## Funcionalidades
@@ -18,6 +20,14 @@ Proyecto final en equipo de **Análisis y Diseño de Sistemas I**, Bachillerato 
 | **Punto de Venta (POS)** | Catálogo visual, buscador con autocompletado, escaneo de código de barras, carrito, control de existencias e impresión de comprobante |
 | **Reportes** | Ventas por rango de fechas, bajo stock, productos más vendidos, movimientos de inventario y bitácora, exportables a CSV |
 | **Bitácora de auditoría** | Registra quién hizo qué y cuándo (inicio de sesión, cambios en cada módulo, ventas) |
+
+## Capturas de pantalla
+
+| Inicio de sesión | Panel principal |
+|---|---|
+| ![Login](docs/capturas/1_login.png) | ![Inicio](docs/capturas/2_inicio.png) |
+| **Productos e inventario** | **Usuarios** |
+| ![Productos](docs/capturas/4_productos.png) | ![Usuarios](docs/capturas/5_usuarios.png) |
 
 ## Tecnologías
 
